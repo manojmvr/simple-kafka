@@ -1,1 +1,1 @@
-#Kafka Producer-Consumer sample
+Kafka Producer Consumer sample that works with Single partition
