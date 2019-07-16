@@ -7,6 +7,8 @@ import scala.io.StdIn
 
 class Producer(topic: String, brokers: String) {
 
+  var count = 0
+
   val producer = new KafkaProducer[String, String](configuration)
 
   private def configuration: Properties = {
@@ -19,12 +21,14 @@ class Producer(topic: String, brokers: String) {
 
   def sendMessages(): Unit = {
     println("Enter message (type exit to quit)")
-    var message = StdIn.readLine()
 
+    var message = "hi ";
     while (! message.equals("exit")) {
-      val record = new ProducerRecord[String, String](topic, "1", message)
+      // Skip key to produce message in a round robin fashion
+      val record = new ProducerRecord[String, String](topic, message + count)
       producer.send(record)
-      message = StdIn.readLine()
+      Thread.sleep(1000)
+      count += 1
     }
 
     producer.close()
@@ -34,7 +38,7 @@ class Producer(topic: String, brokers: String) {
 
 object Producer extends App {
 
-  val producer = new Producer(brokers = "localhost:9092", topic = "mytest")
+  val producer = new Producer(brokers = "localhost:9092", topic = "test2")
   producer.sendMessages()
 
 }
