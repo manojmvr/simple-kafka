@@ -20,15 +20,15 @@ class Producer(topic: String, brokers: String) {
   }
 
   def sendMessages(): Unit = {
-    println("Enter message (type exit to quit)")
+    println("Sending message to all the paritions in round robin fashion every 1s")
 
     var message = "hi ";
     while (! message.equals("exit")) {
       // Skip key to produce message in a round robin fashion
-      val record = new ProducerRecord[String, String](topic, message + count)
+      val record = new ProducerRecord[String, String](topic, s"${count}")
       producer.send(record)
       Thread.sleep(1000)
-      count += 1
+      count = count + 1
     }
 
     producer.close()
@@ -38,7 +38,7 @@ class Producer(topic: String, brokers: String) {
 
 object Producer extends App {
 
-  val producer = new Producer(brokers = "localhost:9092", topic = "test2")
+  val producer = new Producer(brokers = "localhost:9092", topic = "test3")
   producer.sendMessages()
 
 }
